@@ -14,27 +14,17 @@ class InsertDNSPrefetch extends PageSpeed
         );
 
         $dnsPrefetch = collect($matches[0])->map(function ($item) {
-
-             if (str_contains($item[0], 'debugbar')) {
-                return;
-            }
-
             $domain = (new TrimUrls)->apply($item[0]);
             $domain = explode(
                 '/',
                 str_replace('//', '', $domain)
             );
-            
 
-           if (str_contains(@$domain[0], 'www.schema.org')) {
-                $domain[0] = 'www.schema.org';
-            }
-
-            return "<link rel=\"preconnect\" href=\"//{$domain[0]}\" crossorigin><link rel=\"dns-prefetch\" href=\"//{$domain[0]}\">";
-        })->unique()->implode('');
+            return "<link rel=\"dns-prefetch\" href=\"//{$domain[0]}\">";
+        })->unique()->implode("\n");
 
         $replace = [
-           '#<head>(.*?)#' => "<head>{$dnsPrefetch}",
+            '#<head>(.*?)#' => "<head>\n{$dnsPrefetch}",
         ];
 
         return $this->replace($replace, $buffer);

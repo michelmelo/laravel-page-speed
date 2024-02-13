@@ -2,21 +2,21 @@
 
 namespace RenatoMarinho\LaravelPageSpeed\Test\Middleware;
 
-use Mockery as m;
 use Illuminate\Http\Request;
-use RenatoMarinho\LaravelPageSpeed\Test\TestCase;
-use Symfony\Component\HttpFoundation\StreamedResponse;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use RenatoMarinho\LaravelPageSpeed\Middleware\PageSpeed;
+use Mockery as m;
 use RenatoMarinho\LaravelPageSpeed\Middleware\CollapseWhitespace;
+use RenatoMarinho\LaravelPageSpeed\Middleware\PageSpeed;
+use RenatoMarinho\LaravelPageSpeed\Test\TestCase;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ShouldNotProcessResponseTest extends TestCase
 {
     /**
      * PageSpeed middleware instance.
      *
-     * @var \RenatoMarinho\LaravelPageSpeed\Middleware\PageSpeed
+     * @var PageSpeed
      */
     protected $middleware;
 
@@ -114,7 +114,7 @@ class ShouldNotProcessResponseTest extends TestCase
     {
         return function ($request) {
             $response = new StreamedResponse(function () {
-                echo "I am Streamed";
+                echo 'I am Streamed';
             });
 
             $response->headers->set('Content-Disposition', $response->headers->makeDisposition(

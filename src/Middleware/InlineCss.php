@@ -4,9 +4,9 @@ namespace RenatoMarinho\LaravelPageSpeed\Middleware;
 
 class InlineCss extends PageSpeed
 {
-    private $html = '';
-    private $class = [];
-    private $style = [];
+    private $html   = '';
+    private $class  = [];
+    private $style  = [];
     private $inline = [];
 
     public function apply($buffer)
@@ -21,8 +21,7 @@ class InlineCss extends PageSpeed
         );
 
         $this->class = collect($matches[1])->mapWithKeys(function ($item) {
-
-            return [ 'page_speed_'.rand() => $item[0] ];
+            return ['page_speed_' . rand() => $item[0]];
         })->unique();
 
         return $this->injectStyle()->injectClass()->fixHTML()->html;
@@ -31,18 +30,17 @@ class InlineCss extends PageSpeed
     private function injectStyle()
     {
         collect($this->class)->each(function ($attributes, $class) {
-
             $this->inline[] = ".{$class}{ {$attributes} }";
 
             $this->style[] = [
-                'class' => $class,
+                'class'      => $class,
                 'attributes' => preg_quote($attributes, '/')];
         });
 
         $injectStyle = implode(' ', $this->inline);
 
         $replace = [
-           '#</head>(.*?)#' => "<style>{$injectStyle}</style></head>"
+            '#</head>(.*?)#' => "\n<style>{$injectStyle}</style>\n</head>",
         ];
 
         $this->html = $this->replace($replace, $this->html);
@@ -54,7 +52,7 @@ class InlineCss extends PageSpeed
     {
         collect($this->style)->each(function ($item) {
             $replace = [
-                '/style="'.$item['attributes'].'"/' => "class=\"{$item['class']}\"",
+                '/style="' . $item['attributes'] . '"/' => "class=\"{$item['class']}\"",
             ];
 
             $this->html = $this->replace($replace, $this->html);
@@ -66,10 +64,10 @@ class InlineCss extends PageSpeed
     private function fixHTML()
     {
         $newHTML = [];
-        $tmp = explode('<', $this->html);
+        $tmp     = explode('<', $this->html);
 
         $replaceClass = [
-            '/class="(.*?)"/' => "",
+            '/class="(.*?)"/' => '',
         ];
 
         foreach ($tmp as $value) {
@@ -77,7 +75,7 @@ class InlineCss extends PageSpeed
 
             if (count($matches[1]) > 1) {
                 $replace = [
-                    '/>/' => "class=\"".implode(' ', $matches[1])."\">",
+                    '/>/' => 'class="' . implode(' ', $matches[1]) . '">',
                 ];
 
                 $newHTML[] = str_replace(

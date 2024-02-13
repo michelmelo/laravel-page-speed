@@ -54,19 +54,6 @@ return [
         '*.iso',
         '*.flv',
         '*.m4v',
-        '*.torrent'
-    ],
-    
-    /*
-    |--------------------------------------------------------------------------
-    | Skip Custom Domain
-    |--------------------------------------------------------------------------
-    |
-    | Skip Custom Domain to exclude.
-    |
-    */
-
-    'domain' => [
-        // for eg: str_replace(['https://', 'http://'], ['', ''], env('FILAMENT_DOMAIN'))
+        '*.torrent',
     ],
 ];

@@ -3,9 +3,9 @@
 namespace RenatoMarinho\LaravelPageSpeed\Test\Config;
 
 use Illuminate\Http\Request;
+use Mockery as m;
 use RenatoMarinho\LaravelPageSpeed\Middleware\TrimUrls;
 use RenatoMarinho\LaravelPageSpeed\Test\TestCase;
-use Mockery as m;
 
 class ConfigTest extends TestCase
 {
@@ -28,22 +28,21 @@ class ConfigTest extends TestCase
     public function testDisableFlag()
     {
         $middleware = $this->mockMiddlewareWithEnableFalse();
-        $response = $middleware->handle($this->request, $this->getNext());
+        $response   = $middleware->handle($this->request, $this->getNext());
 
-        $this->assertStringContainsString("https://", $response->getContent());
-        $this->assertStringContainsString("http://", $response->getContent());
-        $this->assertStringContainsString("https://code.jquery.com/jquery-3.2.1.min.js", $response->getContent());
+        $this->assertStringContainsString('https://', $response->getContent());
+        $this->assertStringContainsString('http://', $response->getContent());
+        $this->assertStringContainsString('https://code.jquery.com/jquery-3.2.1.min.js', $response->getContent());
     }
-
 
     public function testEnableIsNull()
     {
         $middleware = $this->mockMiddlewareWithEnableNull();
-        $response = $middleware->handle($this->request, $this->getNext());
+        $response   = $middleware->handle($this->request, $this->getNext());
 
-        $this->assertStringContainsString("//", $response->getContent());
-        $this->assertStringContainsString("//", $response->getContent());
-        $this->assertStringContainsString("//code.jquery.com/jquery-3.2.1.min.js", $response->getContent());
+        $this->assertStringContainsString('//', $response->getContent());
+        $this->assertStringContainsString('//', $response->getContent());
+        $this->assertStringContainsString('//code.jquery.com/jquery-3.2.1.min.js', $response->getContent());
     }
 
     public function testSkipRoute()
