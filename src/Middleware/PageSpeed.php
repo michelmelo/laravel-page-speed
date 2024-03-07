@@ -4,8 +4,8 @@ namespace RenatoMarinho\LaravelPageSpeed\Middleware;
 
 use Closure;
 use RenatoMarinho\LaravelPageSpeed\Entities\HtmlSpecs;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 abstract class PageSpeed
 {
@@ -23,7 +23,7 @@ abstract class PageSpeed
      * Handle an incoming request.
      *
      * @param  \Illuminate\Http\Request $request
-     * @param  Closure $next
+     * @param  \Closure $next
      * @return \Illuminate\Http\Response $response
      */
     public function handle($request, Closure $next)
@@ -34,7 +34,7 @@ abstract class PageSpeed
             return $response;
         }
 
-        $html       = $response->getContent();
+        $html = $response->getContent();
         $newContent = $this->apply($html);
 
         return $response->setContent($newContent);
@@ -53,7 +53,7 @@ abstract class PageSpeed
     }
 
     /**
-     * Check Laravel Page Speed is enabled or not.
+     * Check Laravel Page Speed is enabled or not
      *
      * @return bool
      */
@@ -69,7 +69,7 @@ abstract class PageSpeed
     }
 
     /**
-     * Should Process.
+     * Should Process
      *
      * @param  \Illuminate\Http\Request $request
      * @param  \Illuminate\Http\Response $response
@@ -92,7 +92,7 @@ abstract class PageSpeed
         $patterns = config('laravel-page-speed.skip', []);
 
         foreach ($patterns as $pattern) {
-            if ($request->is($pattern) || $request->has($pattern)) {
+            if ($request->is($pattern)) {
                 return false;
             }
         }
@@ -101,7 +101,7 @@ abstract class PageSpeed
     }
 
     /**
-     * Match all occurrences of the html tags given.
+     * Match all occurrences of the html tags given
      *
      * @param array  $tags   Html tags to match in the given buffer
      * @param string $buffer Middleware response buffer
@@ -110,7 +110,7 @@ abstract class PageSpeed
      */
     protected function matchAllHtmlTag(array $tags, string $buffer): array
     {
-        $voidTags   = array_intersect($tags, HtmlSpecs::voidElements());
+        $voidTags = array_intersect($tags, HtmlSpecs::voidElements());
         $normalTags = array_diff($tags, $voidTags);
 
         return array_merge(
@@ -133,7 +133,7 @@ abstract class PageSpeed
     }
 
     /**
-     * Replace occurrences of regex pattern inside of given HTML tags.
+     * Replace occurrences of regex pattern inside of given HTML tags
      *
      * @param array  $tags    Html tags to match and run regex to replace occurrences
      * @param string $regex   Regex rule to match on the given HTML tags
@@ -148,7 +148,7 @@ abstract class PageSpeed
             preg_match_all($regex, $tagMatched, $contentsMatched);
 
             $tagAfterReplace = str_replace($contentsMatched[0], $replace, $tagMatched);
-            $buffer          = str_replace($tagMatched, $tagAfterReplace, $buffer);
+            $buffer = str_replace($tagMatched, $tagAfterReplace, $buffer);
         }
 
         return $buffer;
